@@ -1,4 +1,4 @@
-package de.hs_mannheim.informatik.mvn;
+package de.hs_mannheim.informatik.mvn.model;
 
 import java.io.File;
 import java.io.IOException;
