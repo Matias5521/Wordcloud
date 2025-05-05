@@ -1,23 +1,19 @@
 package de.hs_mannheim.informatik.mvn.model;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+
+import de.hs_mannheim.informatik.mvn.view.Anzeige;
 
 public class Wordcloud {
 	
-	private HashMap<Word, Integer> woerter = new HashMap<>();
+	private Anzeige ui;
+	
+	private ArrayList<File> files = new ArrayList<>();
 	
 	public Wordcloud() {
 		
+		ui = new Anzeige(this);
+		
 	}
-
-	public HashMap<Word, Integer> getWoerter() {
-		return woerter;
-	}
-
-	public void setWoerter(HashMap<Word, Integer> woerter) {
-		this.woerter = woerter;
-	}
-	
-	
 
 }

@@ -1,22 +1,12 @@
 package de.hs_mannheim.informatik.mvn.controller;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.de.GermanAnalyzer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
-
-import de.hs_mannheim.informatik.mvn.view.Anzeige;
+import de.hs_mannheim.informatik.mvn.model.Wordcloud;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
-		Anzeige ui = new Anzeige();
+		Wordcloud wc = new Wordcloud();
 
 //		// Beispiel PDFBox
 //		String pdfFilePath = "src/main/resources/wc.pdf";
