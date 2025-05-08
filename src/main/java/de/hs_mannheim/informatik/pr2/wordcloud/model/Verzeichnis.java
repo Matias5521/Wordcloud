@@ -65,13 +65,13 @@ public class Verzeichnis {
 
 			extrahiereWorteAusPdf();
 
-		} else if (endung[1].equals("docx")) {
-
-			extrahiereWorteAusDocx();
-
 		} else if (endung[1].equals("txt")) {
 
 			extrahiereWorteAusTxt();
+
+		}else if (endung[1].equals("docx")) {
+
+			extrahiereWorteAusDocx();
 
 		} else if (endung[1].equals("pptx")) {
 
