@@ -1,5 +1,8 @@
-BoyLayout:
+BoxLayout in GUI:
 https://docs.oracle.com/javase/tutorial/uiswing/layout/box.html
 
-JComboBox:
+JComboBox in GUI:
 https://docs.oracle.com/javase/8/docs/api/javax/swing/JComboBox.html
+
+Stopwords setzen:
+https://lucene.apache.org/core/5_1_0/analyzers-common/org/apache/lucene/analysis/de/GermanAnalyzer.html
