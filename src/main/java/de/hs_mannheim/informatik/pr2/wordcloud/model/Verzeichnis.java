@@ -1,6 +1,7 @@
 package de.hs_mannheim.informatik.pr2.wordcloud.model;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +25,12 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xslf.usermodel.XSLFShape;
+import org.apache.poi.xslf.usermodel.XSLFSlide;
+import org.apache.poi.xslf.usermodel.XSLFTextShape;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import de.hs_mannheim.informatik.pr2.wordcloud.controller.Main;
 
@@ -69,7 +76,7 @@ public class Verzeichnis {
 
 			extrahiereWorteAusTxt();
 
-		}else if (endung[1].equals("docx")) {
+		} else if (endung[1].equals("docx")) {
 
 			extrahiereWorteAusDocx();
 
@@ -80,7 +87,24 @@ public class Verzeichnis {
 	}
 
 	private void extrahiereWorteAusPptx() {
+		try (FileInputStream fis = new FileInputStream(location); 
+				XMLSlideShow ppt = new XMLSlideShow(fis)) {
 
+			StringBuilder text = new StringBuilder();
+
+			for (XSLFSlide slide : ppt.getSlides()) {
+				for (XSLFShape shape : slide.getShapes()) {
+					if (shape instanceof XSLFTextShape textShape) {
+						text.append(textShape.getText()).append(" ");
+					}
+				}
+			}
+
+			bearbeiteText(text.toString());
+
+		} catch (IOException e) {
+			logger.error("Fehler beim Lesen der PPTX-Datei", e);
+		}
 	}
 
 	private void extrahiereWorteAusTxt() {
@@ -104,6 +128,20 @@ public class Verzeichnis {
 
 	private void extrahiereWorteAusDocx() {
 
+		try {
+			try (FileInputStream fis = new FileInputStream(location);
+					XWPFDocument doc = new XWPFDocument(fis);
+					XWPFWordExtractor extractor = new XWPFWordExtractor(doc)) {
+
+				String text = extractor.getText();
+				bearbeiteText(text);
+
+			} catch (IOException e) {
+				logger.error("Fehler beim Lesen der DOCX-Datei", e);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void extrahiereWorteAusPdf() {
@@ -119,7 +157,7 @@ public class Verzeichnis {
 			bearbeiteText(text);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Fehler beim Einlesen aus der Datei.");
 		}
 
 	}
@@ -145,6 +183,7 @@ public class Verzeichnis {
 
 				} catch (IOException e) {
 					e.printStackTrace();
+					logger.error("Fehler beim Bearbeiten des Textes.");
 				}
 			} else {
 				try (Analyzer analyzer = createGermanAnalyzerOhneStemming(stopSet)) {
@@ -153,6 +192,7 @@ public class Verzeichnis {
 
 				} catch (IOException e) {
 					e.printStackTrace();
+					logger.error("Fehler beim Bearbeiten des Textes.");
 				}
 			}
 
@@ -164,6 +204,7 @@ public class Verzeichnis {
 
 				} catch (IOException e) {
 					e.printStackTrace();
+					logger.error("Fehler beim Bearbeiten des Textes.");
 				}
 			} else {
 				try (Analyzer analyzer = createEnglishAnalyzerOhneStemming(stopSet)) {
@@ -172,6 +213,7 @@ public class Verzeichnis {
 
 				} catch (IOException e) {
 					e.printStackTrace();
+					logger.error("Fehler beim Bearbeiten des Textes.");
 				}
 			}
 
@@ -226,11 +268,11 @@ public class Verzeichnis {
 
 		for (String wort : tokensNeu) {
 
-			if(konvertierung.equals("Upper")) {
+			if (konvertierung.equals("Upper")) {
 				woerter.put(wort.toUpperCase(), woerter.getOrDefault(wort.toUpperCase(), 0) + 1);
-			}else if(konvertierung.equals("Lower")) {
+			} else if (konvertierung.equals("Lower")) {
 				woerter.put(wort.toLowerCase(), woerter.getOrDefault(wort.toLowerCase(), 0) + 1);
-			}else {
+			} else {
 				woerter.put(wort, woerter.getOrDefault(wort, 0) + 1);
 			}
 		}

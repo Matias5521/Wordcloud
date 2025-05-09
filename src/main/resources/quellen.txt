@@ -6,3 +6,8 @@ https://docs.oracle.com/javase/8/docs/api/javax/swing/JComboBox.html
 
 Stopwords setzen:
 https://lucene.apache.org/core/5_1_0/analyzers-common/org/apache/lucene/analysis/de/GermanAnalyzer.html
+
+Apache Poi für Microsoft Files:
+https://poi.apache.org/text-extraction.html
+https://poi.apache.org/apidocs/dev/org/apache/poi/xslf/usermodel/XMLSlideShow.html
+https://poi.apache.org/apidocs/dev/org/apache/poi/xwpf/usermodel/XWPFDocument.html

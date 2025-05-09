@@ -50,7 +50,7 @@ public class Anzeige extends JFrame {
 		jp1.setLayout(new BoxLayout(jp1, BoxLayout.X_AXIS));
 		jp1.add(new JLabel("Filepfad mit Dateiname und Endung: "));
 		jp1.add(Box.createHorizontalGlue());
-		jtf1 = new JTextField("/home/matias-mas-viehl/WordcloudMVN/src/main/resources/wc.txt", 24);
+		jtf1 = new JTextField("C:\\Users\\matia\\git\\Wordcloud\\src\\main\\resources\\wc.pptx", 24);
 		jtf1.setMaximumSize(new Dimension(100, 24));
 		jp1.add(jtf1);
 
@@ -94,7 +94,7 @@ public class Anzeige extends JFrame {
 		jp5.setLayout(new BoxLayout(jp5, BoxLayout.X_AXIS));
 		jp5.add(new JLabel("Konvertierung des Textes: "));
 		jp5.add(Box.createHorizontalGlue());
-		String[] moeglichkeiten2 = { "Upper", "Lower", "Original"};
+		String[] moeglichkeiten2 = { "Upper", "Lower"};
 		jcb2 = new JComboBox<String>(moeglichkeiten2);
 		jcb2.setMaximumSize(new Dimension(100, 24));
 		jp5.add(jcb2);
