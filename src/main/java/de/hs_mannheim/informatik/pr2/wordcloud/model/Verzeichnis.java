@@ -97,24 +97,16 @@ public class Verzeichnis {
 	private void schreibeWorteInCloud() {
 
 		// Alle Worte rausfiltern, die die minimal Frequenz nicht erfuellen
-		for (String wort : woerter.keySet()) {
-			if (woerter.get(wort) < frequenz) {
-				woerter.remove(wort);
-			}
-		}
+		woerter.entrySet().removeIf(e -> e.getValue() < frequenz);
 
 		// So viele Worte löschen, bis maximale Anzahl an Worten erlaubt
-		if (maxWoerter < woerter.size()) {
-			Random r = new Random();
-			for (int i = 0; i < maxWoerter; i++) {
-
-				int rand = r.nextInt(0, woerter.size() + 1);
-				woerter.remove(r);
-
-			}
-		} else {
-			logger.error(
-					"Es können nicht mehr Worte entfehrnt werden, als vorhanden. Maximale Anzahl an Worten ändern...");
+		Random r = new Random();
+		List<String> keys = new ArrayList<>(woerter.keySet());
+		while (woerter.size() > maxWoerter) {
+			int randIndex = r.nextInt(keys.size());
+			String key = keys.get(randIndex);
+			woerter.remove(key);
+			keys.remove(randIndex);
 		}
 
 		// Alphabetische Sortierung beachten
@@ -136,72 +128,94 @@ public class Verzeichnis {
 	private void befuelleHtml(Map<String, Integer> worte) {
 
 		String html1 = """
-				<html>
-				
-					<head>
-						<title>PR2 Wordcloud</title>
-					</head>
+			<html>
+				<head>
+				    <title>PR2 Wordcloud</title>
+				</head>
 
-					<body>
+				<body>
 
-						<style type="text/css"><!--
-							#htmltagcloud{
+				    <style type="text/css">
+				        #htmltagcloud{
 
-									font-size: 100%;
-									width: auto;
-									font-family:'lucida grande','trebuchet ms',arial,helvetica,sans-serif;
-									background-color:#fff;
-									margin:1em 1em 0 1em;
-									border:2px dotted #ddd;
-									padding:2em;
+				                font-size: 100%;
+				                width: auto;
+				                font-family:'lucida grande','trebuchet ms',arial,helvetica,sans-serif;
+				                background-color:#fff;
+				                margin:1em 1em 0 1em;
+				                border:2px dotted #ddd;
+				                padding:2em;
 
-							}
-							#htmltagcloud{line-height:2.4em;word-spacing:normal;letter-spacing:normal;text-transform:none;text-align:justify;text-indent:0}
-							#htmltagcloud a:link{text-decoration:none}
-							#htmltagcloud a:visited{text-decoration:none}
-							#htmltagcloud a:hover{color:white;background-color:#05f}
-							#htmltagcloud a:active{color:white;background-color:#03d}.wrd{padding:0;position:relative}.wrd a{text-decoration:none}.tagcloud0{font-size:1.0em;color:#ACC1F3;z-index:10}.tagcloud0 a{color:#ACC1F3}.tagcloud1{font-size:1.4em;color:#ACC1F3;z-index:9}.tagcloud1 a{color:#ACC1F3}.tagcloud2{font-size:1.8em;color:#86A0DC;z-index:7;}.tagcloud2 a{color:#86A0DC}.tagcloud3{font-size:2.2em;color:#86A0DC;z-index:7;padding:5px}.tagcloud3 a{color:#86A0DC}.tagcloud4{font-size:2.6em;color:#607EC5;z-index:6}.tagcloud4 a{color:#607EC5}.tagcloud5{font-size:3.0em;color:#607EC5;z-index:5}.tagcloud5 a{color:#607EC5}.tagcloud6{font-size:3.3em;color:#4C6DB9;z-index:4}.tagcloud6 a{color:#4C6DB9}.tagcloud7{font-size:3.6em;color:#395CAE;z-index:3}.tagcloud7 a{color:#395CAE}.tagcloud8{font-size:3.9em;color:#264CA2;z-index:2}.tagcloud8 a{color:#264CA2}.tagcloud9{font-size:4.2em;color:#133B97;z-index:1}.tagcloud9 a{color:#133B97}.tagcloud10{font-size:4.5em;color:#002A8B;z-index:0}.tagcloud10 a{color:#002A8B}.freq{font-size:10pt !important;color:#bbb}#credit{text-align:center;color:#333;margin-bottom:0.6em;font:0.7em 'lucida grande',trebuchet,'trebuchet ms',verdana,arial,helvetica,sans-serif}#credit a:link{color:#777;text-decoration:none}#credit a:visited{color:#777;text-decoration:none}#credit a:hover{color:white;background-color:#05f}#credit a:active{text-decoration:underline}// -->
-						</style>
+				        }
+				        #htmltagcloud{line-height:2.4em;word-spacing:normal;letter-spacing:normal;text-transform:none;text-align:justify;text-indent:0}
+				        #htmltagcloud a:link{text-decoration:none}
+				        #htmltagcloud a:visited{text-decoration:none}
+				        #htmltagcloud a:hover{color:white;background-color:#05f}
+				        #htmltagcloud a:active{color:white;background-color:#03d}
+				        .wrd{padding:0;position:relative}
+				        .wrd a{text-decoration:none}
+				        .tagcloud0{font-size:1.0em;color:#ACC1F3;z-index:10}.tagcloud0 a{color:#ACC1F3}
+				        .tagcloud1{font-size:1.4em;color:#ACC1F3;z-index:9}.tagcloud1 a{color:#ACC1F3}
+				        .tagcloud2{font-size:1.8em;color:#86A0DC;z-index:7}.tagcloud2 a{color:#86A0DC}
+				        .tagcloud3{font-size:2.2em;color:#86A0DC;z-index:7;padding:5px}.tagcloud3 a{color:#86A0DC}
+				        .tagcloud4{font-size:2.6em;color:#607EC5;z-index:6}.tagcloud4 a{color:#607EC5}
+				        .tagcloud5{font-size:3.0em;color:#607EC5;z-index:5}.tagcloud5 a{color:#607EC5}
+				        .tagcloud6{font-size:3.3em;color:#4C6DB9;z-index:4}.tagcloud6 a{color:#4C6DB9}
+				        .tagcloud7{font-size:3.6em;color:#395CAE;z-index:3}.tagcloud7 a{color:#395CAE}
+				        .tagcloud8{font-size:3.9em;color:#264CA2;z-index:2}.tagcloud8 a{color:#264CA2}
+				        .tagcloud9{font-size:4.2em;color:#133B97;z-index:1}.tagcloud9 a{color:#133B97}
+				        .tagcloud10{font-size:4.5em;color:#002A8B;z-index:0}.tagcloud10 a{color:#002A8B}
+				        .freq{font-size:10pt !important;color:#bbb}
+				        #credit{text-align:center;color:#333;margin-bottom:0.6em;font:0.7em 'lucida grande',trebuchet,'trebuchet ms',verdana,arial,helvetica,sans-serif}
+				        #credit a:link{color:#777;text-decoration:none}
+				        #credit a:visited{color:#777;text-decoration:none}
+				        #credit a:hover{color:white;background-color:#05f}
+				        #credit a:active{text-decoration:underline}
+				    </style>
 
-						<div id="htmltagcloud">
+				    <div id="htmltagcloud">
 
 							""";
-		
-		int id=0;
+
+		int id = 0;
 		int lvl = 1;
-		
-		for(String wort: worte.keySet()) {
+
+		for (String wort : worte.keySet()) {
 			lvl = ermittleGroesse(worte, wort);
-			html1 += "<span id=\""+id+"\" class=\"wrd tagcloud\""+lvl+"><a href=\"\">"+wort+"</a></span>";
+			html1 += "          <span id=\"" + id + "\" class=\"wrd tagcloud" + lvl + "\">" + "<a href=\"\">" + wort
+					+ "</a></span>\n";
+
 			id++;
 		}
-		
+
 		html1 += """
-				
-				</div>
 
-			</body>
+						</div>
 
-		</html>""";
-		
-		//ins File schreiben
+					</body>
+
+				</html>\n""";
+
+		// ins File schreiben
 		try {
 
-			BufferedWriter writer = new BufferedWriter(new FileWriter("C:/Users/matiagit/Wordcloud/src/main/resources/anzeige.html", true));
-			
+			BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\matia\\git\\Wordcloud\\src\\main\\resources\\anzeige.html"));
+
+			logger.info(html1);
 			writer.write(html1);
-		
+
 		} catch (IOException e) {
 			logger.error("Fehler beim Beschreiben des Html Files.");
 			e.printStackTrace();
 		}
 
 	}
+
 	private int ermittleGroesse(Map<String, Integer> worte, String wort) {
-		
+
 		int max = Collections.max(worte.values());
-		int r = (int) Math.round((double) (worte.get(wort)-1)*max/(max-1));
-		logger.info(r);
+		int r = (int) Math.round((double) (worte.get(wort) - 1) * max / (max - 1));
+		// logger.info(r);
 		return r;
 	}
 
